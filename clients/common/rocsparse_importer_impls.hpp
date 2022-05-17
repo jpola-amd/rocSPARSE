@@ -26,3 +26,4 @@
 #include "rocsparse_importer_matrixmarket.hpp"
 #include "rocsparse_importer_rocalution.hpp"
 #include "rocsparse_importer_rocsparseio.hpp"
+#include "rocsparse_importer_ans.hpp"

@@ -32,7 +32,8 @@ struct rocsparse_importer_format_t
     FORMAT(unknown)           \
     FORMAT(matrixmarket)      \
     FORMAT(rocalution)        \
-    FORMAT(rocsparseio)
+    FORMAT(rocsparseio)       \
+    FORMAT(ans)
 
     typedef enum _
     {
@@ -60,6 +61,8 @@ public:
             return ".csr";
         case rocsparseio:
             return ".bin";
+        case ans:
+            return ".dump"
         case unknown:
             return "";
         }

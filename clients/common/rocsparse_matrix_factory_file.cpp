@@ -84,6 +84,12 @@ struct rocsparse_init_file_traits<rocsparse_matrix_file_rocsparseio>
     using importer_t = rocsparse_importer_rocsparseio;
 };
 
+template<>
+struct rocsparse_init_file_traits<rocsparse_matrix_file_ans>
+{
+    using importer_t = rocsparse_importer_ans;
+};
+
 template <rocsparse_matrix_init MATRIX_INIT>
 struct rocsparse_init_file
 {
@@ -110,6 +116,14 @@ struct rocsparse_init_file
         importer_t importer(filename);
         return rocsparse_import_sparse_coo(importer, s...);
     }
+
+    template <typename... S>
+    static inline rocsparse_status import_hyb(const char* filename, S&&... s)
+    {
+        importer_t importer(filename);
+        return rocsparse_import_sparse_hyb(importer, s...);
+    }
+
 };
 
 template <rocsparse_matrix_init MATRIX_INIT, typename T, typename I, typename J>
@@ -278,6 +292,11 @@ void rocsparse_matrix_factory_file<MATRIX_INIT, T, I, J>::init_gebsr(
         }
         break;
     }
+    case rocsparse_matrix_file_ans:
+    {
+        std::cerr << "We should load matrix in from ANSYS to init_gebsr format \n";
+        break;
+    }
     }
 
     switch(storage)
@@ -358,6 +377,11 @@ void rocsparse_matrix_factory_file<MATRIX_INIT, T, I, J>::init_csr(
             col_ind[i] = (J)coo_col_ind[i];
         }
 
+        break;
+    }
+    case rocsparse_matrix_file_ans:
+    {
+        std::cerr << "We should load matrix in from ANSYS to csr format \n";
         break;
     }
     }
@@ -462,6 +486,11 @@ void rocsparse_matrix_factory_file<MATRIX_INIT, T, I, J>::init_coo(
         CHECK_ROCSPARSE_THROW_ERROR(status);
         break;
     }
+    case rocsparse_matrix_file_ans:
+    {
+        std::cerr << "We should load matrix in from ANSYS to coo format \n";
+        break;
+    }
     }
 
     switch(matrix_type)
@@ -511,6 +540,25 @@ void rocsparse_matrix_factory_file<MATRIX_INIT, T, I, J>::init_coo(
         apply_toint(coo_val);
     }
 }
+
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, double, int32_t, int32_t>;
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, double, int64_t, int32_t>;
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, double, int64_t, int64_t>;
+
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, float, int32_t, int32_t>;
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, float, int64_t, int32_t>;
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, float, int64_t, int64_t>;
+
+
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, rocsparse_double_complex, int32_t, int32_t>;
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, rocsparse_double_complex, int64_t, int32_t>;
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, rocsparse_double_complex, int64_t, int64_t>;
+
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, rocsparse_float_complex, int32_t, int32_t>;
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, rocsparse_float_complex, int64_t, int32_t>;
+template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, rocsparse_float_complex, int64_t, int64_t>;
+
+
 
 template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_mtx, float, int32_t, int32_t>;
 template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_mtx, float, int64_t, int32_t>;
@@ -649,3 +697,4 @@ template struct rocsparse_matrix_factory_file<rocsparse_matrix_file_rocsparseio,
                                               rocsparse_double_complex,
                                               int64_t,
                                               int64_t>;
+

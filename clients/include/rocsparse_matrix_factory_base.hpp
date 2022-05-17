@@ -104,6 +104,22 @@ public:
                           rocsparse_fill_mode    uplo,
                           rocsparse_storage_mode storage)
         = 0;
+        
+    virtual void init_hyb_ans(
+                            //COO matrix
+                            std::vector<I>& coo_row_ind,
+                            std::vector<I>& coo_col_ind,
+                            std::vector<T>& coo_val,
+                            I& coo_nelements,
+                            //ELL matrix
+                            std::vector<I>& ell_ind,
+                            std::vector<T>& ell_val,
+                            I& ell_stride,
+                            I& ell_cols,
+                            I& M, //rows
+                            I& N, //cols
+                            I& nnz,
+                            rocsparse_index_base base)  {};
 };
 
 #endif // ROCSPARSE_MATRIX_FACTORY_BASE_HPP

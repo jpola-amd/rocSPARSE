@@ -91,4 +91,9 @@ template <typename T, typename I = rocsparse_int, typename J = rocsparse_int>
 using rocsparse_matrix_factory_rocsparseio
     = rocsparse_matrix_factory_file<rocsparse_matrix_file_rocsparseio, T, I, J>;
 
+template <typename T, typename I = rocsparse_int, typename J = rocsparse_int>
+using rocsparse_matrix_factory_ans 
+    = rocsparse_matrix_factory_file<rocsparse_matrix_file_ans, T, I, J>;
+
+
 #endif // ROCSPARSE_MATRIX_FACTORY_FILE_HPP

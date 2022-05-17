@@ -57,7 +57,8 @@ typedef enum rocsparse_matrix_init_
     rocsparse_matrix_file_mtx         = 3, /**< Read from .mtx (matrix market) file */
     rocsparse_matrix_file_rocalution  = 4, /**< Read from .csr (rocALUTION) file */
     rocsparse_matrix_zero             = 5, /**< Generates zero matrix */
-    rocsparse_matrix_file_rocsparseio = 6 /**< Read from .bin (rocSPARSEIO) file */
+    rocsparse_matrix_file_rocsparseio = 6, /**< Read from .bin (rocSPARSEIO) file */
+    rocsparse_matrix_file_ans         = 7 /**< Read frin .dump (Ansys) file */
 } rocsparse_matrix_init;
 
 constexpr auto rocsparse_matrix2string(rocsparse_matrix_init matrix)
@@ -78,6 +79,8 @@ constexpr auto rocsparse_matrix2string(rocsparse_matrix_init matrix)
         return "zero";
     case rocsparse_matrix_file_rocsparseio:
         return "bin";
+    case rocsparse_matrix_file_ans:
+        return "dump";
     }
     return "invalid";
 }

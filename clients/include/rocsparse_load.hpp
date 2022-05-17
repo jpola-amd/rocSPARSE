@@ -52,6 +52,12 @@ struct rocsparse_importer_format_traits_t<rocsparse_importer_format_t::matrixmar
     using importer_t = rocsparse_importer_matrixmarket;
 };
 
+template <>
+struct rocsparse_importer_format_traits_t<rocsparse_importer_format_t::ans>
+{
+    using importer_t = rocsparse_importer_ans;
+};
+
 template <rocsparse_importer_format_t::value_type IMPORTER_FORMAT, typename T>
 rocsparse_status rocsparse_load_template(const char* basename, const char* suffix, T& obj)
 {
@@ -115,6 +121,11 @@ rocsparse_status rocsparse_load(const char* basename, const char* suffix, T& obj
     case rocsparse_importer_format_t::matrixmarket:
     {
         return rocsparse_load_template<rocsparse_importer_format_t::matrixmarket, T, P...>(
+            basename, suffix, obj, params...);
+    }
+    case rocsparse_importer_format_t::ans:
+    {
+        return rocsparse_load_template<rocsparse_importer_format_t::ans, T, P...>(
             basename, suffix, obj, params...);
     }
     }

@@ -1071,6 +1071,37 @@ void rocsparse_init_gebsr_random(std::vector<I>&            row_ptr,
         }
     }
 }
+/* ====================================================================================*/
+/*! \brief Read matrix from binary Ansys HYB format  */
+template <typename I, typename T>
+void rocsparse_init_hyb_ans(const char* filename,
+                            //COO matrix
+                            std::vector<I>& coo_row_ind,
+                            std::vector<I>& coo_col_ind,
+                            std::vector<T>& coo_val,
+                            I& coo_nelements,
+                            //ELL matrix
+                            std::vector<I>& ell_ind,
+                            std::vector<T>& ell_val,
+                            I& ell_stride,
+                            I& ell_cols,
+                            I& M, //rows
+                            I& N, //cols
+                            I& nnz,
+                            rocsparse_index_base base)
+{
+    rocsparse_importer_ans importer(filename);
+    rocsparse_status status
+        = rocsparse_import_sparse_hyb(importer, 
+                                    coo_row_ind, coo_col_ind, coo_val, coo_nelements,
+                                    ell_ind, ell_val, ell_stride, ell_cols,
+                                    M, N, nnz, base);
+    CHECK_ROCSPARSE_THROW_ERROR(status);
+
+
+}
+
+
 
 #define INSTANTIATEI(TYPE)                    \
     template void rocsparse_init_index<TYPE>( \

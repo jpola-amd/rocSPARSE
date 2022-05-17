@@ -110,6 +110,15 @@ rocsparse_matrix_factory<T, I, J>::rocsparse_matrix_factory(const Arguments&    
         break;
     }
 
+    case rocsparse_matrix_file_ans:
+    {
+        std::string filename = arg.timing 
+                                ? arg.filename
+                                : rocsparse_exepath() + "../matrices/" + arg.filename + ".dump";
+        this->m_instance     = new rocsparse_matrix_factory_ans<T, I, J>(filename.c_str());
+        break;
+    }
+
     default:
     {
         this->m_instance = nullptr;

@@ -192,3 +192,60 @@ rocsparse_status rocsparse_import_sparse_coo(rocsparse_importer<IMPORTER>& impor
 
     return rocsparse_status_success;
 }
+
+template<typename I,
+         typename T,
+         typename IMPORTER,
+         template <typename...> class VECTOR1, //indices
+         template <typename...> class VECTOR2> //values
+rocsparse_status rocsparse_import_sparse_hyb(rocsparse_importer<IMPORTER>& importer,
+                                             VECTOR1<I>& coo_row_ind,
+                                             VECTOR1<I>& coo_col_ind,
+                                             VECTOR2<T>& coo_val,
+                                             I& coo_nelements,
+                                             //ELL matrix
+                                             VECTOR1<I>& ell_ind,
+                                             VECTOR2<T>& ell_val,
+                                             I& ell_stride,
+                                             I& ell_cols,
+                                             I& M, //rows
+                                             I& N, //cols
+                                             I& nnz,
+                                             rocsparse_index_base base)
+{
+    //rocsparse_index_base import_base;
+
+    rocsparse_status status = importer.rocsparse_import_sparse_ell(&M, &N, &ell_stride);
+    if (status != rocsparse_status_success)
+    {
+        return status;
+    }
+
+    I ell_size = N * ell_stride;
+    ell_ind.resize(ell_size);
+    ell_val.resize(ell_size);
+
+    status = importer.rocsparse_import_sparse_ell(ell_ind.data(), ell_val.data());
+    if (status != rocsparse_status_success)
+    {
+        return status;
+    }
+
+    status = importer.rocsparse_import_sparse_coo(&coo_nelements);
+    if (status != rocsparse_status_success)
+    {
+        return status;
+    }
+
+    coo_row_ind.resize(coo_nelements);
+    coo_col_ind.resize(coo_nelements);
+    coo_val.resize(coo_nelements);
+
+    status = importer.rocsparse_import_sparse_coo(coo_row_ind.data(), coo_col_ind.data(), coo_val.data());
+
+    if (status != rocsparse_status_success)
+    {
+        return status;
+    }
+    return rocsparse_status_success;
+};
